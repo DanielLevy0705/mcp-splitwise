@@ -24,7 +24,7 @@ server.tool('get-expenses',
         const response = await fetch(`https://secure.splitwise.com/api/v3.0/get_expenses?group_id=${group_id}`, {
             headers,
         });
-        return response.json();
+        return {content: [{ type: 'text', text: await response.text() }]};
     }
 );
 
