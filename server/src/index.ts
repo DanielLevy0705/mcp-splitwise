@@ -1,28 +1,37 @@
-import express from 'express';
-import cors from 'cors';
-import dotenv from 'dotenv';
-import { config } from './config.js';
+// import express from 'express';
 
-// Load environment variables
-dotenv.config();
+// const app = express();
+// const port = process.env.PORT || 3000;
 
-const app = express();
+// app.get('/', (req, res) => {
+//   res.json({ message: 'Hello World' });
+// });
 
-// Middleware
-app.use(cors());
-app.use(express.json());
+// app.listen(port, () => {
+//   console.log(`Server running on port ${port}`);
+// }); 
 
-// Routes
-app.get('/', (req, res) => {
-  res.json({ 
-    message: 'Welcome to the API',
-    environment: config.nodeEnv,
-    apiUrl: config.apiUrl
-  });
+import { McpServer } from "@modelcontextprotocol/sdk/server/mcp";
+import { StdioServerTransport } from "@modelcontextprotocol/sdk/server/stdio";
+import { z } from "zod";
+
+const server = new McpServer({
+    name: 'mcp-splitwise',
+    version: '1.0.0',
 });
 
-// Start server
-app.listen(config.port, () => {
-  console.log(`Server is running in ${config.nodeEnv} mode on port ${config.port}`);
-  console.log(`API URL: ${config.apiUrl}`);
-}); 
+server.tool('get-expenses', 
+    {group_id: z.string()},
+    async ({group_id}) => {
+        const response = await fetch(`https://secure.splitwise.com/api/v3.0/get_expenses?group_id=${group_id}`);
+        return response.json();
+    }
+);
+
+const mcpTransport = new StdioServerTransport();
+
+try {
+    await server.connect(mcpTransport);
+} catch (error) {
+    console.error(error);
+}
