@@ -1,15 +1,29 @@
 {
   "compilerOptions": {
-    "target": "ESNext",
     "module": "ESNext",
-    "moduleResolution": "node",
+    "target": "ESNext",
+    "moduleResolution": "Node",
     "outDir": "./dist",
     "rootDir": "./src",
     "strict": true,
     "esModuleInterop": true,
     "skipLibCheck": true,
     "allowJs": true,
-    "resolveJsonModule": true
+    "resolveJsonModule": true,
+    "preserveSymlinks": true,
+    "removeComments": true,
+    "sourceMap": true,
+    "strictBindCallApply": true,
+    "strictFunctionTypes": true,
+    "strictNullChecks": true,
+    "strictPropertyInitialization": true,
+  },
+  "ts-node": {
+    "files": true,
+    "preferTsExts": true
+  },
+  "typeAcquisition": {
+    "enable": true
   },
   "include": ["src/**/*"],
   "exclude": ["node_modules", "dist"]
