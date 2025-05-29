@@ -1,7 +1,7 @@
 import 'dotenv/config';
 import { McpServer } from '@modelcontextprotocol/sdk/server/mcp.js';
 import { StdioServerTransport } from '@modelcontextprotocol/sdk/server/stdio.js';
-import { z } from "zod";
+import { addTools } from './tools.js';
 
 if (!process.env.SPLITWISE_API_KEY) {
     throw new Error('SPLITWISE_API_KEY is not set in environment variables');
@@ -18,18 +18,9 @@ const headers = {
     'Content-Type': 'application/json',
 };
 
-server.tool('get-expenses', 
-    {group_id: z.string()},
-    async ({group_id}) => {
-        const response = await fetch(`https://secure.splitwise.com/api/v3.0/get_expenses?group_id=${group_id}`, {
-            headers,
-        });
-        return {content: [{ type: 'text', text: await response.text() }]};
-    }
-);
+await addTools(server);
 
 const mcpTransport = new StdioServerTransport();
-
 try {
     await server.connect(mcpTransport);
 } catch (error) {
